@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rota.cemrota.Model.PontoInteresse;
 import com.rota.cemrota.Model.Usuario;
+import com.rota.cemrota.Service.PontoInteresseService;
 import com.rota.cemrota.Service.UserService;
 import com.rota.cemrota.security.Login;
 import com.rota.cemrota.security.TokenUtil;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -26,7 +29,9 @@ public class Control {
     
    @Autowired
    private AuthenticationManager authenticationManager; 
-   
+   @Autowired
+   private PontoInteresseService pontoInteresseService;
+
    @Autowired
    private UserService userService;
 
@@ -47,14 +52,16 @@ public class Control {
    @PostMapping(value = "/cadastrarUsuario")   
    public ResponseEntity<Usuario> CriaUsuario(
       @RequestParam("file") MultipartFile file,
-      @RequestParam("nome_usuario") String nome_usuario,
-      @RequestParam("senha") String senha,
-      @RequestParam("email") String email,
-      @RequestParam("sobrenome") String sobrenome 
+      @RequestBody Usuario usuario
    ) throws IllegalStateException, IOException{//como aqui estara presente imagem, a estrategia de @RequestParam é melhor
-      Usuario usuario = new Usuario(nome_usuario, senha, email, sobrenome);
       
       Usuario user =  this.userService.CadastrarUsuario(usuario,file);
       return ResponseEntity.ok(user);
+   }
+   
+   @PostMapping("/cadastroPonto")
+   public ResponseEntity<PontoInteresse> criarPontoInteress(@RequestBody PontoInteresse ponto){
+       PontoInteresse pontoInteresse = this.pontoInteresseService.CadastrarPonto(ponto);
+       return ResponseEntity.ok(pontoInteresse);
    }
 }
