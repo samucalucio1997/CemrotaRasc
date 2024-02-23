@@ -32,7 +32,6 @@ public class SecurityConfig {
               .authorizeHttpRequests(
               p -> {p.requestMatchers(HttpMethod.POST, "/cadastrarUsuario").permitAll()
               .requestMatchers(HttpMethod.GET,"/login").permitAll()
-              // .requestMatchers("/h2-console").permitAll()
               .anyRequest().permitAll();}
               ).headers().frameOptions().disable();
         } catch (Exception e) {

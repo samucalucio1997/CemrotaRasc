@@ -8,12 +8,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 @Entity
 public class Endereco {
- @Id
- @GeneratedValue(strategy = GenerationType.UUID)
- private UUID id_Endereco;   
- private String cidade;
- private String estado;
- public String getCidade() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id_Endereco;   
+    private String cidade;
+    private String estado;
+    private String rua;
+    private String numero;
+ 
+ 
+   public String getCidade() {
     return cidade;
 }
 public void setCidade(String cidade) {
@@ -37,6 +41,8 @@ public String getNumero() {
 public void setNumero(String numero) {
     this.numero = numero;
 }
-private String rua;
- private String numero;
+
+ public UUID getId_Endereco() {
+    return id_Endereco;
+}
 }

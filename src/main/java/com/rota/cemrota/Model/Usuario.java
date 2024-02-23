@@ -28,7 +28,7 @@ public class Usuario implements UserDetails{
     private String email;
     private String sobrenome;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Endereco endereco;
     
     private String imgPerfil;

@@ -2,10 +2,11 @@ package com.rota.cemrota.Model;
 
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer.Target;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,38 @@ public class PontoInteresse {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private Double longitude;
+    private Double latitude;
+    private String turnos;
+    private String dias;
+    private int qtd_quartos;
+    private int qtd_hospedes;
+    private Double valor_quarto;
+    
+    @Enumerated(EnumType.STRING)
+    private Servico servico;
+    
+    @OneToOne
+    private Endereco endereco;
     private String titulo;
+    
+    
+
+
+    public PontoInteresse(Double longitude, Double latitude, String turnos, String dias, int qtd_quartos,
+            int qtd_hospedes, Double valor_quarto, Servico servico, Endereco endereco, String titulo) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.turnos = turnos;
+        this.dias = dias;
+        this.qtd_quartos = qtd_quartos;
+        this.qtd_hospedes = qtd_hospedes;
+        this.valor_quarto = valor_quarto;
+        this.servico = servico;
+        this.endereco = endereco;
+        this.titulo = titulo;
+    }
+
     public String getTitulo() {
         return titulo;
     }
@@ -81,13 +113,7 @@ public class PontoInteresse {
         this.valor_quarto = valor_quarto;
     }
 
-    public Servico getServico() {
-        return servico;
-    }
-
-    public void setServico(Servico servico) {
-        this.servico = servico;
-    }
+    
 
     public Endereco getEndereco() {
         return endereco;
@@ -97,16 +123,28 @@ public class PontoInteresse {
         this.endereco = endereco;
     }
 
-    private Double longitude;
-    private Double latitude;
-    private String turnos;
-    private String dias;
-    private int qtd_quartos;
-    private int qtd_hospedes;
-    private Double valor_quarto;
-    @Enumerated(EnumType.STRING)
-    private Servico servico;
+    public UUID getId() {
+        return id;
+    }
+
+
+    private enum Servico {
+        HOSPEDAGEM("hospedagem"),
+        VENDA("venda"),
+        EVENTO("evento"),
+        PONTO_TURISTICO("ponto turistico");
+         
+        private final String descricao;
     
-    @OneToOne(fetch = FetchType.EAGER)
-    private Endereco endereco;
+        private Servico(String descricao) {
+            this.descricao = descricao;
+        }
+    
+        public String getDescricao() {
+            return descricao;
+        }    
+    }
+
 }
+
+

@@ -51,7 +51,7 @@ public class Control {
 
    @PostMapping(value = "/cadastrarUsuario")   
    public ResponseEntity<Usuario> CriaUsuario(
-      @RequestParam("file") MultipartFile file,
+      @RequestParam(value = "file",required = false) MultipartFile file,
       @RequestBody Usuario usuario
    ) throws IllegalStateException, IOException{//como aqui estara presente imagem, a estrategia de @RequestParam é melhor
       

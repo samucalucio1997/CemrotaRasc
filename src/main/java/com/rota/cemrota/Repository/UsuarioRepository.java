@@ -10,7 +10,6 @@ import com.rota.cemrota.Model.Usuario;
 
 
 
-
 public interface UsuarioRepository extends JpaRepository<Usuario,UUID>{
     
    Usuario findByEmail(String email);
