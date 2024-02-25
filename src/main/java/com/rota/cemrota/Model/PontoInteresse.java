@@ -2,8 +2,6 @@ package com.rota.cemrota.Model;
 
 import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer.Target;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,12 +23,13 @@ public class PontoInteresse {
     private int qtd_hospedes;
     private Double valor_quarto;
     
-    @Enumerated(EnumType.STRING)
-    private Servico servico;
+    
     
     @OneToOne
     private Endereco endereco;
     private String titulo;
+    @Enumerated(EnumType.STRING)
+    private Servico servico;
     
     
 
