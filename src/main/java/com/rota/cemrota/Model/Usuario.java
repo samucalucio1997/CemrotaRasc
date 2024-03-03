@@ -34,10 +34,6 @@ public class Usuario implements UserDetails{
     
      
     
-    
-    
-    
-    
     public Usuario(String nome_usuario, String senha, String email, String sobrenome) {
         this.nome_usuario = nome_usuario;
         this.senha = senha;

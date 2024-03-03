@@ -18,11 +18,13 @@ import com.rota.cemrota.Repository.UsuarioRepository;
 @Service
 public class UserService implements UserDetailsService{
      
-
+   
     private final Path fileStoraged;
+
+    @Autowired
+    private EmailService emailService;
     
-    
-    
+
     public UserService(FilestorageProperties fileStoraged) {
         this.fileStoraged = Paths.get(fileStoraged.getUploadDir())
         .toAbsolutePath().normalize();
@@ -39,9 +41,11 @@ public class UserService implements UserDetailsService{
 
     public Usuario CadastrarUsuario(Usuario usuario,MultipartFile file) throws IllegalStateException, IOException{
         Usuario usr = (Usuario) usuarioRepository.findByEmail(usuario.getEmail());
+        
         if (usr != null) {
            throw new RuntimeException("null");
         }
+
         if (!file.isEmpty()) {
             String path = file.getOriginalFilename();
             Path caminho = this.fileStoraged.resolve(path).toAbsolutePath().normalize();
@@ -49,6 +53,10 @@ public class UserService implements UserDetailsService{
             usuario.setImgPerfil(path);
         }
         
+        this.emailService.Enviar(usuario.getEmail(),
+        usuario.getNome_usuario() + " cadastro foi confirmado",
+        "Bem-vindo ao cemrota");
+
         usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getPassword()));
         this.usuarioRepository.save(usuario);
         return usuario;

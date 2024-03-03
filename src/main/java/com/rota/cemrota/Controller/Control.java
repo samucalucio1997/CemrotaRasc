@@ -52,9 +52,11 @@ public class Control {
    @PostMapping(value = "/cadastrarUsuario")   
    public ResponseEntity<Usuario> CriaUsuario(
       @RequestParam(value = "file",required = false) MultipartFile file,
-      @RequestBody Usuario usuario
-   ) throws IllegalStateException, IOException{//como aqui estara presente imagem, a estrategia de @RequestParam é melhor
-      
+      @RequestParam(value="nome") String nome,
+      @RequestParam(value = "senha") String senha,
+      @RequestParam(value = "email") String email,
+      @RequestParam("sobrenome") String sobrenome) throws IllegalStateException, IOException{//como aqui estara presente imagem, a estrategia de @RequestParam é melhor
+      Usuario usuario = new Usuario(nome, senha, email, sobrenome);
       Usuario user =  this.userService.CadastrarUsuario(usuario,file);
       return ResponseEntity.ok(user);
    }
@@ -64,4 +66,6 @@ public class Control {
        PontoInteresse pontoInteresse = this.pontoInteresseService.CadastrarPonto(ponto);
        return ResponseEntity.ok(pontoInteresse);
    }
+
+
 }
