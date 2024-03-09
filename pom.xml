@@ -48,6 +48,19 @@
          <artifactId>java-jwt</artifactId>
          <version>4.4.0</version>
         </dependency>
+       
+	    <!-- oauthgoogle -->
+		 <dependency>
+              <groupId>org.springframework.security</groupId>
+              <artifactId>spring-security-oauth2-client</artifactId>
+              <version>5.3.4.RELEASE</version>
+          </dependency>
+          <dependency>
+             <groupId>org.springframework.security</groupId>
+             <artifactId>spring-security-oauth2-jose</artifactId>
+             <version>5.3.4.RELEASE</version>
+          </dependency>
+        <!-- oauthgoogle --> 
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -71,11 +84,6 @@
            <groupId>org.projectlombok</groupId>
            <artifactId>lombok</artifactId>
            <optional>true</optional>
-        </dependency>
-
-		<dependency>
-          <groupId>org.flywaydb</groupId>
-          <artifactId>flyway-core</artifactId>
         </dependency>
 
 		<dependency>

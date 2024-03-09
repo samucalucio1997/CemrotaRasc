@@ -32,13 +32,16 @@ public class SecurityConfig {
               .authorizeHttpRequests(
               p -> {p.requestMatchers(HttpMethod.POST, "/cadastrarUsuario").permitAll()
               .requestMatchers(HttpMethod.GET,"/login").permitAll()
-              .anyRequest().permitAll();}
+              .anyRequest().authenticated()
+              ;}
               ).headers().frameOptions().disable();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-       }).addFilterBefore(this.FilterChain, UsernamePasswordAuthenticationFilter.class).build();
+       })
+      //  .oauth2Login(n -> n.)
+       .addFilterBefore(this.FilterChain, UsernamePasswordAuthenticationFilter.class).build();
    }
    
    @Bean
