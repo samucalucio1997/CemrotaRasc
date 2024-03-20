@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,6 @@ import com.rota.cemrota.Model.PontoInteresse;
 import com.rota.cemrota.Model.Usuario;
 import com.rota.cemrota.Service.PontoInteresseService;
 import com.rota.cemrota.Service.UserService;
-import com.rota.cemrota.security.Login;
 import com.rota.cemrota.security.TokenUtil;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,25 +29,37 @@ public class Control {
     
    @Autowired
    private AuthenticationManager authenticationManager; 
+
    @Autowired
    private PontoInteresseService pontoInteresseService;
 
    @Autowired
    private UserService userService;
 
-   @PostMapping("/login")
-   public ResponseEntity<String> getPri(@RequestParam("nome_usuario") String nome_user,
-   @RequestParam("senha") String senha){
-      try {
-         Login usuario = new Login(nome_user, senha);
-         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(usuario.getNome_usuario(), usuario.getSenha());
-         AuthenticationManager auth =(AuthenticationManager) this.authenticationManager.authenticate(usernamePasswordAuthenticationToken); 
-         var user = (Usuario) auth.authenticate(usernamePasswordAuthenticationToken).getPrincipal();
-         return ResponseEntity.ok(TokenUtil.EncodeT(user));
-      } catch (Exception e) {
-         throw new NoSuchElementException("não cadastrado");
+   @PostMapping(value="/login")
+public ResponseEntity<String> getPri(
+   @RequestParam("nome_usuario") String nome_user,
+   @RequestParam("senha") String senha
+){
+   try {
+      UsernamePasswordAuthenticationToken authenticationToken =
+         new UsernamePasswordAuthenticationToken(nome_user, senha);
+      
+      
+      Authentication authentication = this.authenticationManager.authenticate(authenticationToken); 
+      
+      
+      if (authentication.isAuthenticated()) {
+         var auth = (Usuario) authentication.getPrincipal();
+         
+         return ResponseEntity.ok(TokenUtil.EncodeT(auth));
+      } else {
+         throw new NoSuchElementException("Usuário não autenticado");
       }
+   } catch (Exception e) {
+      throw new NoSuchElementException("Erro durante a autenticação");
    }
+}
 
    @PostMapping(value = "/cadastrarUsuario")   
    public ResponseEntity<Usuario> CriaUsuario(
@@ -56,8 +68,12 @@ public class Control {
       @RequestParam(value = "senha") String senha,
       @RequestParam(value = "email") String email,
       @RequestParam("sobrenome") String sobrenome) throws IllegalStateException, IOException{//como aqui estara presente imagem, a estrategia de @RequestParam é melhor
-      Usuario usuario = new Usuario(nome, senha, email, sobrenome);
-      Usuario user =  this.userService.CadastrarUsuario(usuario,file);
+      Usuario usuario = new Usuario();
+      usuario.setEmail(email);
+      usuario.setNome_usuario(nome);
+      usuario.setSenha(senha);
+      usuario.setSobrenome(sobrenome);
+      Usuario user =  this.userService.CadastrarUsuario(usuario,file!=null?file:null);
       return ResponseEntity.ok(user);
    }
    

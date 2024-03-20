@@ -34,12 +34,15 @@ public class Usuario implements UserDetails{
     
      
     
-    public Usuario(String nome_usuario, String senha, String email, String sobrenome) {
-        this.nome_usuario = nome_usuario;
-        this.senha = senha;
-        this.email = email;
-        this.sobrenome = sobrenome;
-    }
+    // public Usuario() {
+    // }
+
+    // public Usuario(String nome_usuario, String senha, String email, String sobrenome) {
+    //     this.nome_usuario = nome_usuario;
+    //     this.senha = senha;
+    //     this.email = email;
+    //     this.sobrenome = sobrenome;
+    // }
 
     public UUID getId() {
         return id;
@@ -48,9 +51,6 @@ public class Usuario implements UserDetails{
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
-    
-    
     
     public String getEmail() {
         return email;
@@ -69,13 +69,13 @@ public class Usuario implements UserDetails{
     @Override
     public String getPassword() {
         // TODO Auto-generated method stub
-        return this.senha;
+        return getSenha();
     }
 
     @Override
     public String getUsername() {
         // TODO Auto-generated method stub
-        return this.email;
+        return getEmail();
     }
 
     @Override

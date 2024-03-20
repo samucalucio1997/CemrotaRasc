@@ -30,27 +30,29 @@ public class SecurityConfig {
               .sessionManagement(management -> management
               .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .authorizeHttpRequests(
-              p -> {p.requestMatchers(HttpMethod.POST, "/cadastrarUsuario").permitAll()
-              .requestMatchers(HttpMethod.GET,"/login").permitAll()
-              .anyRequest().authenticated()
+              p -> {p.requestMatchers(HttpMethod.POST, "/home/cadastrarUsuario").permitAll()
+              .requestMatchers(HttpMethod.POST,"/home/login").permitAll()
+              .anyRequest().permitAll()
               ;}
-              ).headers().frameOptions().disable();
+              );
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
        })
-      //  .oauth2Login(n -> n.)
+      //  .oauth2Login("")
        .addFilterBefore(this.FilterChain, UsernamePasswordAuthenticationFilter.class).build();
    }
    
    @Bean
-   AuthenticationManager AuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+   public AuthenticationManager AuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+     System.out.println("passou aqui");  
      return authenticationConfiguration.getAuthenticationManager();
    }
   
    @Bean
-   PasswordEncoder passwordEncoder(){ 
+   public PasswordEncoder passwordEncoder(){ 
+            System.out.println("BCryptpasswordEncoder trabalhando");
             return new BCryptPasswordEncoder();
    } 
 }

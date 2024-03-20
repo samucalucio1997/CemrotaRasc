@@ -34,13 +34,14 @@ public class UserService implements UserDetailsService{
     private UsuarioRepository usuarioRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
         // TODO Auto-generated method stub
-        return (UserDetails) usuarioRepository.findByEmail(email);
+        System.out.println(usuarioRepository.TicasjmafaknEmail(nome));
+        return usuarioRepository.TicasjmafaknEmail(nome);
     }
 
     public Usuario CadastrarUsuario(Usuario usuario,MultipartFile file) throws IllegalStateException, IOException{
-        Usuario usr = (Usuario) usuarioRepository.findByEmail(usuario.getEmail());
+        Usuario usr = (Usuario) usuarioRepository.TicasjmafaknEmail(usuario.getEmail());
         
         if (usr != null) {
            throw new RuntimeException("null");
@@ -53,9 +54,9 @@ public class UserService implements UserDetailsService{
             usuario.setImgPerfil(path);
         }
         
-        this.emailService.Enviar(usuario.getEmail(),
-        usuario.getNome_usuario() + " cadastro foi confirmado",
-        "Bem-vindo ao cemrota");
+        // this.emailService.Enviar(usuario.getEmail(),
+        // usuario.getNome_usuario() + " cadastro foi confirmado",
+        // "Bem-vindo ao cemrota");
 
         usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getPassword()));
         this.usuarioRepository.save(usuario);

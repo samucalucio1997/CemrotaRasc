@@ -13,7 +13,7 @@ public class TokenUtil {
     public static String EncodeT(Usuario username){
         return JWT.create()
         .withIssuer("Auth")
-        .withSubject(username.getUsername())
+        .withSubject(username.getEmail())
         .withClaim("id", username.getId().toString())
         .withExpiresAt(LocalDateTime.now()
         .plusMinutes(2)

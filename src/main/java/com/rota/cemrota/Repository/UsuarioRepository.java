@@ -4,15 +4,16 @@ package com.rota.cemrota.Repository;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.rota.cemrota.Model.Usuario;
 
 
-
-@Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,UUID>{
     
-   Usuario findByEmail(String email);
+   @Query(value = "select * from usuario where usuario.email=?1",nativeQuery = true)
+   Usuario TicasjmafaknEmail(String email);
+
+   // Usuario findByNome_usuario(String nome_usuario);
 
 }
