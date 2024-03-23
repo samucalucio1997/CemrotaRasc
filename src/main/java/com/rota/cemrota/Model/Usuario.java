@@ -34,15 +34,15 @@ public class Usuario implements UserDetails{
     
      
     
-    // public Usuario() {
-    // }
+    public Usuario() {
+    }
 
-    // public Usuario(String nome_usuario, String senha, String email, String sobrenome) {
-    //     this.nome_usuario = nome_usuario;
-    //     this.senha = senha;
-    //     this.email = email;
-    //     this.sobrenome = sobrenome;
-    // }
+    public Usuario(String nome_usuario, String senha, String email, String sobrenome) {
+        this.nome_usuario = nome_usuario;
+        this.senha = senha;
+        this.email = email;
+        this.sobrenome = sobrenome;
+    }
 
     public UUID getId() {
         return id;

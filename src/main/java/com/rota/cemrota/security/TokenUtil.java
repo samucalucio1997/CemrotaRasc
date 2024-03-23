@@ -16,13 +16,13 @@ public class TokenUtil {
         .withSubject(username.getEmail())
         .withClaim("id", username.getId().toString())
         .withExpiresAt(LocalDateTime.now()
-        .plusMinutes(2)
+        .plusDays(1)
         .toInstant(ZoneOffset.of("-03:00")))
-        .sign(Algorithm.HMAC256("grpirn%#4096"));
+        .sign(Algorithm.HMAC256("goth"));
     }
 
     public static String getSubject(String token){
-      return JWT.require(Algorithm.HMAC256("grpirn%#4096"))
+      return JWT.require(Algorithm.HMAC256("goth"))
       .withIssuer("Auth").build().verify(token).getSubject();
     }
 }

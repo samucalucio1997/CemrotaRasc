@@ -1,5 +1,7 @@
 package com.rota.cemrota.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rota.cemrota.ApiGoogleServices.PolilinhaDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.maps.internal.PolylineEncoding;
+import com.rota.cemrota.ApiGoogleServices.DirectionsResponse;
+import com.rota.cemrota.ApiGoogleServices.Leg;
 import com.rota.cemrota.ApiGoogleServices.RotasService;
 
 import reactor.core.publisher.Flux;
@@ -20,12 +26,18 @@ public class ApiRestGoogleController {
     private RotasService rotasService;
      
     @GetMapping("/li")
-    public ResponseEntity<PolilinhaDTO> RotaPadrao(@RequestParam("origem") String origem,@RequestParam("destino") String destino){
+    public ResponseEntity<Object> RotaPadrao(@RequestParam("origem") String origem,@RequestParam("destino") String destino) throws Exception{
         try {
+            // ObjectMapper mapper = new ObjectMapper();
+        
             Flux<Object> retorno = this.rotasService.PegarRotaPadrao(origem, destino);
-            String test = retorno.blockFirst().toString();
-            System.out.println(test);
-            return  null;
+
+            // String test = retorno.blockFirst().toString();
+            // System.out.println(test);
+            // PolylineEncoding codec = new PolylineEncoding();
+            // DirectionsResponse response = mapper.readValue(retorno.blockFirst().toString(), DirectionsResponse.class);
+            
+            return  ResponseEntity.status(200).body(null);
         } catch (Exception e) {
             throw e;
         }

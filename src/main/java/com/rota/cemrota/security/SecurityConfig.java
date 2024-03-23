@@ -32,22 +32,23 @@ public class SecurityConfig {
               .authorizeHttpRequests(
               p -> {p.requestMatchers(HttpMethod.POST, "/home/cadastrarUsuario").permitAll()
               .requestMatchers(HttpMethod.POST,"/home/login").permitAll()
-              .anyRequest().permitAll()
-              ;}
-              );
+              .anyRequest().authenticated();
+            });
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
        })
-      //  .oauth2Login("")
-       .addFilterBefore(this.FilterChain, UsernamePasswordAuthenticationFilter.class).build();
+      //  .oauth2Login(n -> {
+      //   n.permitAll();
+      // })
+      .addFilterBefore(this.FilterChain, UsernamePasswordAuthenticationFilter.class).build();
    }
    
    @Bean
    public AuthenticationManager AuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-     System.out.println("passou aqui");  
-     return authenticationConfiguration.getAuthenticationManager();
+           System.out.println("passou aqui");  
+           return authenticationConfiguration.getAuthenticationManager();
    }
   
    @Bean
