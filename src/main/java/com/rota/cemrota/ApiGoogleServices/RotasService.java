@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.maps.model.LatLng;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class RotasService {
@@ -18,19 +20,35 @@ public class RotasService {
     // @Value("${chave}")
     // private String chave;
    
-   public Flux<Object> PegarRotaPadrao(String origem, String destino){
+   public Flux<Object> PegarRotaPadrao(String origem, String destino) throws Exception{
       try {
-        JsonObject obj = new JsonObject();
-        obj.get("routes");
-        Flux<DirectionsResponse> resp = WebClient.builder().baseUrl("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=AIzaSyDW7WsDOA3tMKkx8d9cxmGiw_PPk9Er-Q4")
-       .build().get().retrieve().bodyToFlux(DirectionsResponse.class);
-        DirectionsResponse rotas = resp.blockFirst();
-        Routes routes = rotas.routes().get(0);
+        ObjectMapper map = new ObjectMapper();
+         
+        //  String json = map.readValue(
+        //  WebClient
+        //  .create()
+        //  .get()
+        //  .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=AIzaSyDW7WsDOA3tMKkx8d9cxmGiw_PPk9Er-Q4")
+        //  .retrieve().bodyToFlux(DirectionsResponse.class).blockFirst(), DirectionsResponse.class).toString();
+        String resp = map.writeValueAsString(WebClient
+        .create()
+        .get()
+        .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=")
+        .retrieve().bodyToFlux(DirectionsResponse.class).blockFirst());
+        // resp.
+        System.out.println(
+          resp
+        );
+        //   WebClient
+        // .create()
+        // .get()
+        // .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=AIzaSyDW7WsDOA3tMKkx8d9cxmGiw_PPk9Er-Q4")
+        // .retrieve().bodyToFlux(DirectionsResponse.class);
         // String encode = routes.leg()
         // for (Routes routes2 : routes) {
         //     System.out.println(routes2.leg().start_address() + " e " + routes2.leg().end_address());
         // }
-        return null;
+           return null;
       } catch (Exception e) {
         throw e;
       }
