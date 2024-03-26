@@ -30,7 +30,7 @@ public class ApiRestGoogleController {
         try {
             // ObjectMapper mapper = new ObjectMapper();
         
-            Flux<Object> retorno = this.rotasService.PegarRotaPadrao(origem, destino);
+            this.rotasService.PegarRotaPadrao(origem, destino);
 
             // String test = retorno.blockFirst().toString();
             // System.out.println(test);

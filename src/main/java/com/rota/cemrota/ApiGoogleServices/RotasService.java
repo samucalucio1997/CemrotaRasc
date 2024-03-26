@@ -2,11 +2,18 @@ package com.rota.cemrota.ApiGoogleServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.maps.model.LatLng;
@@ -20,38 +27,58 @@ public class RotasService {
     // @Value("${chave}")
     // private String chave;
    
-   public Flux<Object> PegarRotaPadrao(String origem, String destino) throws Exception{
+   public void PegarRotaPadrao(String origem, String destino) throws Exception{
+    Mono<JSONObject> directionsMono = WebClient.create()
+    .get()
+    .uri("https://maps.googleapis.com/maps/api/directions/json?origin=" + origem + "&destination=" + destino + "&key=")
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(Map.class) // Supondo que a resposta seja um Map
+    .map(response -> {
       try {
-        ObjectMapper map = new ObjectMapper();
-         
-        //  String json = map.readValue(
-        //  WebClient
-        //  .create()
-        //  .get()
-        //  .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=AIzaSyDW7WsDOA3tMKkx8d9cxmGiw_PPk9Er-Q4")
-        //  .retrieve().bodyToFlux(DirectionsResponse.class).blockFirst(), DirectionsResponse.class).toString();
-        String resp = map.writeValueAsString(WebClient
-        .create()
-        .get()
-        .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=")
-        .retrieve().bodyToFlux(DirectionsResponse.class).blockFirst());
-        // resp.
-        System.out.println(
-          resp
-        );
-        //   WebClient
-        // .create()
-        // .get()
-        // .uri("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&key=AIzaSyDW7WsDOA3tMKkx8d9cxmGiw_PPk9Er-Q4")
-        // .retrieve().bodyToFlux(DirectionsResponse.class);
-        // String encode = routes.leg()
-        // for (Routes routes2 : routes) {
-        //     System.out.println(routes2.leg().start_address() + " e " + routes2.leg().end_address());
-        // }
-           return null;
-      } catch (Exception e) {
-        throw e;
+        return new JSONObject(new ObjectMapper().writeValueAsString(response));
+      } catch (JsonProcessingException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
+      return null;
+    });
+
+
+   directionsMono.subscribe(jsonObject -> {
+    try {
+        // Acesse o array "routes"
+        JSONArray routes = jsonObject.getJSONArray("routes");
+
+        // Verifique se há rotas
+        if (routes.length() > 0) {
+            // Acesse o primeiro objeto de rota no array
+            JSONObject firstRoute = routes.getJSONObject(0);
+            JSONObject location = firstRoute.optJSONObject("end_location"); // Use optJSONObject para lidar com possíveis ausências
+            
+            if (location != null) {
+                double latitude = location.getDouble("lat");
+                double longitude = location.getDouble("lng");
+                System.out.println("Latitude: " + latitude);
+                System.out.println("Longitude: " + longitude);
+                // ... processe latitude e longitude ...
+            } else {
+                System.out.println("Localização final não encontrada na rota");
+            }
+            
+
+        } else {
+            System.out.println("Nenhuma rota encontrada no JSON");
+        }
+    } catch (Exception e) {
+        // Tratar exceções de análise
+        e.printStackTrace();
+    }
+});
+    // System.out.println(js);
    }
 
 

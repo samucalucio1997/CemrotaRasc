@@ -32,7 +32,8 @@ public class SecurityConfig {
               .authorizeHttpRequests(
               p -> {p.requestMatchers(HttpMethod.POST, "/home/cadastrarUsuario").permitAll()
               .requestMatchers(HttpMethod.POST,"/home/login").permitAll()
-              .anyRequest().authenticated();
+              .anyRequest().permitAll();
+              // .authenticated();
             });
         } catch (Exception e) {
             // TODO Auto-generated catch block
