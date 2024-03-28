@@ -1,13 +1,14 @@
 package com.rota.cemrota.ApiGoogleServices;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Leg{
+public class Leg implements Serializable{
     @JsonProperty("distance")
     Distance distance;
     @JsonProperty("duration")

@@ -1,11 +1,12 @@
 package com.rota.cemrota.ApiGoogleServices;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Polyline {
+
+public class Polyline implements Serializable {
    @JsonProperty("points") 
    private String points;
 

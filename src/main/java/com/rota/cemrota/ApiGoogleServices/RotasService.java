@@ -1,6 +1,7 @@
 package com.rota.cemrota.ApiGoogleServices;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,61 +29,35 @@ public class RotasService {
     // private String chave;
    
    public void PegarRotaPadrao(String origem, String destino) throws Exception{
-    Mono<JSONObject> directionsMono = WebClient.create()
-    .get()
-    .uri("https://maps.googleapis.com/maps/api/directions/json?origin=" + origem + "&destination=" + destino + "&key=")
-    .accept(MediaType.APPLICATION_JSON)
-    .retrieve()
-    .bodyToMono(Map.class) // Supondo que a resposta seja um Map
-    .map(response -> {
-      try {
-        return new JSONObject(new ObjectMapper().writeValueAsString(response));
-      } catch (JsonProcessingException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (JSONException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      return null;
-    });
-
-
-   directionsMono.subscribe(jsonObject -> {
-    try {
-        // Acesse o array "routes"
-        JSONArray routes = jsonObject.getJSONArray("routes");
-
-        // Verifique se há rotas
-        if (routes.length() > 0) {
-            // Acesse o primeiro objeto de rota no array
-            JSONObject firstRoute = routes.getJSONObject(0);
-            JSONObject location = firstRoute.optJSONObject("end_location"); // Use optJSONObject para lidar com possíveis ausências
-            
-            if (location != null) {
-                double latitude = location.getDouble("lat");
-                double longitude = location.getDouble("lng");
-                System.out.println("Latitude: " + latitude);
-                System.out.println("Longitude: " + longitude);
-                // ... processe latitude e longitude ...
-            } else {
-                System.out.println("Localização final não encontrada na rota");
+       // System.out.println(js);
+       Mono<DirectionsResponse> mon = WebClient.create()
+           .get()
+           .uri("https://maps.googleapis.com/maps/api/directions/json?origin=" + origem + "&destination=" + destino + "&key=")
+           .accept(MediaType.APPLICATION_JSON)
+           .retrieve()
+           .bodyToMono(DirectionsResponse.class);
+         
+          String enc = mon.block().getRoutes().get(0).getLines().getPoints();
+          List<LatLng> polylinhas = this.decode(enc);
+          Iterator<LatLng> pol =  polylinhas.iterator();
+          while (pol.hasNext()) {
+            System.out.print(pol.next());
+            if (pol.hasNext()) {
+                System.out.print(", ");
             }
-            
+          }
+          
+        
 
-        } else {
-            System.out.println("Nenhuma rota encontrada no JSON");
-        }
-    } catch (Exception e) {
-        // Tratar exceções de análise
-        e.printStackTrace();
-    }
-});
-    // System.out.println(js);
+        //  String json = mon.block();  
+        //  System.out.println(json);
+        //  JSONObject objJson = new JSONObject(json);
+        //  JSONArray arr = objJson.optJSONArray("routes");
+        //  JSONObject stack = arr.optJSONObject(0);
+        //  System.out.println(stack.get("legs"));
    }
 
-
-   public static List<LatLng> decode(String encodedPolyline) {
+    public static List<LatLng> decode(String encodedPolyline) {
         List<LatLng> poly = new ArrayList<>();
         int index = 0;
         int len = encodedPolyline.length();
@@ -114,6 +89,57 @@ public class RotasService {
         }
         return poly;
     }
-
+    
 
 }
+
+//     Mono<JSONObject> directionsMono = WebClient.create()
+//     .get()
+//     .uri("https://maps.googleapis.com/maps/api/directions/json?origin=" + origem + "&destination=" + destino + "&key=")
+//     .accept(MediaType.APPLICATION_JSON)
+//     .retrieve()
+//     .bodyToMono(Map.class) // Supondo que a resposta seja um Map
+//     .map(response -> {
+//       try {
+//         return new JSONObject(new ObjectMapper().writeValueAsString(response));
+//       } catch (JsonProcessingException e) {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//       } catch (JSONException e) {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//       }
+//       return null;
+//     });
+
+
+//    directionsMono.subscribe(jsonObject -> {
+//     try {
+//         // Acesse o array "routes"
+//         JSONArray routes = jsonObject.getJSONArray("routes");
+
+//         // Verifique se há rotas
+//         if (routes.length() > 0) {
+//             // Acesse o primeiro objeto de rota no array
+//             JSONObject firstRoute = routes.getJSONObject(0);
+//             JSONObject location = firstRoute.optJSONObject("end_location"); // Use optJSONObject para lidar com possíveis ausências
+            
+//             if (location != null) {
+//                 double latitude = location.getDouble("lat");
+//                 double longitude = location.getDouble("lng");
+//                 System.out.println("Latitude: " + latitude);
+//                 System.out.println("Longitude: " + longitude);
+//                 // ... processe latitude e longitude ...
+//             } else {
+//                 System.out.println("Localização final não encontrada na rota");
+//             }
+            
+
+//         } else {
+//             System.out.println("Nenhuma rota encontrada no JSON");
+//         }
+//     } catch (Exception e) {
+//         // Tratar exceções de análise
+//         e.printStackTrace();
+//     }
+// });
